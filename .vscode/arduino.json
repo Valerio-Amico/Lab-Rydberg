@@ -1,0 +1,4 @@
+{
+    "board": "arduino:avr:unowifi",
+    "sketch": "arduino_for_conditioner/prova.ino"
+}
