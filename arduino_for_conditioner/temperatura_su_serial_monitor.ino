@@ -7,9 +7,9 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
 double Temperature;
-
-long unsigned delay_time = 60*1000;
-long unsigned t0 = millis();
+char ch;
+String line = "";
+bool FIRST = true;
 
 void setup() {
   // initialize serial communication at 9600 bits per second:
@@ -20,12 +20,18 @@ void setup() {
 // the loop routine runs over and over again forever:
 void loop() {
 
-  sensors.requestTemperatures();
-  Temperature=sensors.getTempCByIndex(0);
-  Serial.println(Temperature);
-
-  while ((millis() - t0) < delay_time){
-    delay(1);
+  if(Serial.available()){
+    ch = Serial.read();
+    if (ch == '\n') {
+      // Serial.println(line);
+      if (line.equals("read")){
+        sensors.requestTemperatures();
+        Temperature=sensors.getTempCByIndex(0);
+        Serial.println(Temperature);
+      }
+      line = "";
+    } else if (ch != '\r') {
+      line += ch;  
+    }
   }
-  t0 = millis();
 }

@@ -1,6 +1,7 @@
 {
-    "board": "arduino:avr:uno",
+    "board": "arduino:megaavr:uno2018",
     "sketch": "arduino_for_conditioner/temperatura_su_serial_monitor.ino",
-    "port": "/dev/tty.usbmodem1101",
-    "programmer": "arduino:avrispmkii"
+    "port": "/dev/tty.usbmodem1302",
+    "programmer": "arduino:avrispmkii",
+    "configuration": "mode=off"
 }
