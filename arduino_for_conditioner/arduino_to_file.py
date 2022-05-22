@@ -22,7 +22,7 @@ if path.exists(name)==True:
 else:
     output_file = open(name, "w")
 
-ser = serial.Serial(serial_port, baud_rate)
+ser = serial.Serial(port = serial_port, boudrate = baud_rate, timeout=0.1)
 
 
 while True:
@@ -31,11 +31,16 @@ while True:
         ser.open()
     ser.write("read\n".encode('utf-8'))
     # read the temperature from arduino
-    line = ser.readline()    
-    line = line.decode("utf-8") #ser.readline returns a binary, convert to string
-    
+    # time.sleep(0.05)
+    if ser.in_waiting:
+        line = ser.readline()
+        line = line.decode("utf-8") #ser.readline returns a binary, convert to string
+    else:
+        line = "nothing"
+
     if ser.is_open==True:
         ser.close()
+    
     print(line)
     
     # Getting current date and time

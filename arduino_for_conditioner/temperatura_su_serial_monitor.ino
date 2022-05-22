@@ -23,7 +23,7 @@ void loop() {
   if(Serial.available()){
     ch = Serial.read();
     if (ch == '\n') {
-      // Serial.println(line);
+      Serial.println(line);
       if (line.equals("read")){
         sensors.requestTemperatures();
         Temperature=sensors.getTempCByIndex(0);
