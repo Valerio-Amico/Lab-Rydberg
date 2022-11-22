@@ -23,9 +23,9 @@ class single_atom:
                     - |r, N_IR, N_b, N_d>       with energy   -delta_IR.
                     - |i, N_IR, N_b, N_d+1>     with energy   -delta_IR.
         """
-        self.two_photon_rabi_freq = get_two_photon_rabi_freq(power_blue, waste_blue, power_IR, waste_IR, detuning_blue)
-        self.lower_transition_rabi_freq = Rubidium87().getRabiFrequency(n1=5,  l1=0, j1=0.5, mj1=0.5,  n2=6,  l2=1, j2=3/2, q=-1, laserPower=power_blue, laserWaist=waste_blue, s=0.5)/(2*np.pi)
-        self.higher_transition_rabi_freq = Rubidium87().getRabiFrequency(n1=70,  l1=0, j1=0.5, mj1=0.5,  n2=6,  l2=1, j2=3/2, q=-1, laserPower=power_IR, laserWaist=waste_IR, s=0.5)/(2*np.pi)
+        self.two_photon_rabi_freq = get_two_photon_rabi_freq(power_blue, waste_blue, power_IR, waste_IR, detuning_blue)*1e-6
+        self.lower_transition_rabi_freq = Rubidium87().getRabiFrequency(n1=5,  l1=0, j1=0.5, mj1=0.5,  n2=6,  l2=1, j2=3/2, q=-1, laserPower=power_blue, laserWaist=waste_blue, s=0.5)*1e-6/(2*np.pi)
+        self.higher_transition_rabi_freq = Rubidium87().getRabiFrequency(n1=70,  l1=0, j1=0.5, mj1=0.5,  n2=6,  l2=1, j2=3/2, q=-1, laserPower=power_IR, laserWaist=waste_IR, s=0.5)*1e-6/(2*np.pi)
         if power_depumping is not None and waste_depumping is not None:
             self.depumping_rabi_freq = Rubidium87().getRabiFrequency(n1=70,  l1=0, j1=0.5, mj1=0.5,  n2=6,  l2=1, j2=3/2, q=-1, laserPower=power_depumping, laserWaist=waste_depumping, s=0.5)/(2*np.pi)
         else:
