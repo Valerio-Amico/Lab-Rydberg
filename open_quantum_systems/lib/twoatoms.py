@@ -67,7 +67,7 @@ class two_atoms:
         self.atom_L = atom_L
         self.atom_R = atom_R
         self.interatomic_distance = interatomic_distance
-        self.C6 = hbar * 2*np.pi * 870 *10**3
+        self.C6 = 870 *10**3
         self.Gamma_6p = 1/Rubidium87().getStateLifetime(n=6, l=1, j=1.5, temperature=150*10**-6, includeLevelsUpTo=0, s=0.5)*10**6 # in MHz
         self.Gamma_70s = 1/Rubidium87().getStateLifetime(n=70, l=0, j=0.5, temperature=150*10**-6, includeLevelsUpTo=0, s=0.5)*10**6 # in MHz
         self.V_f = self.V(self.interatomic_distance) # interaction potential
@@ -95,7 +95,7 @@ class two_atoms:
         return H_int
 
     def V(self, r): # r is in mircon and the energy is in Mhz
-        return self.C6/r**6 / (hbar*2*np.pi)
+        return self.C6/r**6
 
 def get_two_photon_rabi_freq(power_blue, waste_blue, power_IR, waste_IR, detuning_blue):
 
