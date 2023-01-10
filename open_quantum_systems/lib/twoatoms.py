@@ -39,8 +39,8 @@ class single_atom:
             [0, self.higher_transition_rabi_freq/2, -detuning_IR, self.depumping_rabi_freq/2],
             [0, 0, self.depumping_rabi_freq/2, -detuning_IR]
         ])
-        def_i = 0
-        def_ry = 4.4
+        def_i = 1
+        def_ry = 4
 
         S_minus_i = qtp.Qobj(self.Gamma_6p**(1/2)*(np.array([[0,1,0,1],[0,0,0,0],[0,0,0,0],[0,0,0,0]])))
         S_minus_ry = qtp.Qobj(self.Gamma_70s**(1/2)*np.array([[0,0,1,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]))
@@ -52,7 +52,7 @@ class single_atom:
         self.radius_blokade = (self.C6/(hbar * 2*np.pi * self.two_photon_rabi_freq))**(1/6)
         pass
 
-    def evolve(self, time, steps, initial_DM, include_spontaneous_emission=True, include_defasing=False):
+    def evolve(self, time, steps, initial_DM, include_spontaneous_emission=True, include_defasing=True):
         """ 
         args:
             time: evolution time
@@ -94,7 +94,7 @@ class single_atom:
         plt.plot([0,times[-1]],[1,1],"--", alpha=0.5)
         plt.plot([0,times[-1]],[0,0],"--", alpha=0.5)
         plt.plot([0,times[-1]],[1/2,1/2],"--", alpha=0.5)
-        plt.ylim([0,max(p_trace_res["rydberg"])])
+        #plt.ylim([0,max(p_trace_res["rydberg"])])
         plt.title(label)
         plt.legend()
 
