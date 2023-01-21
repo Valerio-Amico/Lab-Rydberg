@@ -65,20 +65,25 @@ class markov_chain_FORT:
         if self.FIRST == True and t > self.burst_time:
             self.FIRST = False
             self.R = 0
-            #self.beta = 0
+            self.beta = 0
             self.transition_matrix = self.get_transition_matrix(self.method)
         return np.dot(v, self.transition_matrix)
 
-    def evolve(self, v0, time, steps, burst_time = None):
+    def evolve(self, v0, time, steps, burst_time = None, scale="linear"):
+        if scale == "log":
+            ts = 10**np.linspace(time[0], time[1], steps)
+        else:
+            ts = np.linspace(0, time, steps)
+
         if burst_time is None:
-            self.evo = solve_ivp(self.function_, t_span=(0,time), y0=v0, t_eval=np.linspace(0, time, steps))
+            self.evo = solve_ivp(self.function_, t_span=(ts[0],ts[-1]), y0=v0, t_eval=ts)
             return
         else:
             aus_R = self.R
             aus_beta = self.beta
             self.FIRST = True
             self.burst_time = burst_time
-            self.evo = solve_ivp(self.function_BURST, t_span=(0,time), y0=v0, t_eval=np.linspace(0, time, steps))
+            self.evo = solve_ivp(self.function_BURST, t_span=(ts[0],ts[-1]), y0=v0, t_eval=ts)
             self.R = aus_R
             self.beta = aus_beta
 
@@ -86,15 +91,19 @@ class markov_chain_FORT:
         from sympy import Matrix
         return Matrix(self.transition_matrix)
     
-    def plot_mandel_Q(self):
+    def plot_mandel_Q(self, scale="lin"):
         means_ = []
         vars_ = []
         Qs_ = []
+        N_nm1s_ = []
+        N_2s_ = []
         for i in range(len(self.evo.y[0])):
-            mean_, var_, mandel_Q_ = mean_var_mandel_Q(self.evo.y[:,i])
+            mean_, var_, mandel_Q_, N_nm1_, N_2_ = mean_var_mandel_Q(self.evo.y[:,i])
             means_.append(mean_)
             vars_.append(var_)
             Qs_.append(mandel_Q_)
+            N_nm1s_.append(N_nm1_)
+            N_2s_.append(N_2_)
 
         def fun_paper(t, N):
             return self.R - self.gamma*N - self.beta*N*(N-1)
@@ -107,19 +116,23 @@ class markov_chain_FORT:
         #print(sol_paper.y[-1], sol_paper.t[-1])
         #print(means_[-1], self.evo.t[-1])
 
-        ax1.plot(self.evo.t, Qs_, label="mandel Q", color="green")
+        ax1.plot(self.evo.t, Qs_, linestyle="--", label="mandel Q", color="blue")
         ax1.set_ylabel("mandel Q", fontsize=15)
-        #ax1.set_xscale("log")
+        
         ax1.set_xlabel(r"time", fontsize=15)
         #ax2.plot([0, self.evo.t[-1]],[1,1],c="gray",linestyle="--",alpha=0.7, label=r"$\langle N \rangle=1$")
         ax2.plot(self.evo.t, means_, color="red",label=r"$\langle N \rangle$")
-        ax2.plot(self.evo.t, sol_paper.y[0], label="paper")
+        #ax2.plot(self.evo.t, N_nm1s_, color="black",label=r"$\langle N \rangle \langle (N-1) \rangle$")
+        #ax2.plot(self.evo.t, N_2s_, color="orange",label=r"$\langle N(N-1) \rangle$")
+        #ax2.plot(self.evo.t, sol_paper.y[0], label="paper")
         #vars_ = np.array(vars_)#*self.beta
         #ax2.plot(self.evo.t, vars_, color="blue", label="var")
         #ax2.plot(self.evo.t, (sol_paper.y[0]-means_)/self.beta, label="diff")
 
         ax2.set_ylabel(r"$\langle N \rangle$", fontsize=15)
-        #ax2.set_xscale("log")
+        if scale == "log":
+            ax1.set_xscale("log")
+            ax2.set_xscale("log")
 
         fig.legend(loc=(0.15,0.7), fontsize=15)
 
@@ -134,4 +147,6 @@ def mean_var_mandel_Q(probability_vec):
         men_2 += i**2*probability_vec[i]
     variance = men_2 - mean**2
     Q = variance/mean - 1
-    return mean, variance, Q
+    N_nm1 = mean**2 - mean
+    N_nm12 = men_2 - mean
+    return mean, variance, Q, N_nm1, N_nm12
