@@ -22,7 +22,7 @@ class markov_chain_FORT:
         if method == "model_1":
             return self.get_transition_matrix_model_1()
         if method == "model_2":
-            return self.get_transition_matrix_model_1()
+            return self.get_transition_matrix_model_2()
         print("method must be model_1 or model_2")
         return
     
@@ -119,7 +119,7 @@ class markov_chain_FORT:
         ax1.plot(self.evo.t, Qs_, linestyle="--", label="mandel Q", color="blue")
         ax1.set_ylabel("mandel Q", fontsize=15)
         
-        ax1.set_xlabel(r"time", fontsize=15)
+        ax1.set_xlabel(r"time [s]", fontsize=15)
         #ax2.plot([0, self.evo.t[-1]],[1,1],c="gray",linestyle="--",alpha=0.7, label=r"$\langle N \rangle=1$")
         ax2.plot(self.evo.t, means_, color="red",label=r"$\langle N \rangle$")
         #ax2.plot(self.evo.t, N_nm1s_, color="black",label=r"$\langle N \rangle \langle (N-1) \rangle$")
