@@ -1,15 +1,15 @@
-const int outPin = 13;
-const int inPin = 23;
+const int inPin = A9;
 int a;
+char ch;
 long int t0, t1;
 int state;
+String line = "";
 
 // the setup() method runs once, when the sketch starts
 
 void setup() {
   // initialize the digital pin as an output.
   Serial.begin(9600);
-  pinMode(outPin, OUTPUT);
   pinMode(inPin, INPUT);
   state = 0;
 }
@@ -18,24 +18,17 @@ void setup() {
 // as long as the board has power
 
 void loop() {
-  //t0 = micros(); 
-  a = digitalRead(inPin);   // set the LED on
-  if(a==1){
-    digitalWrite(outPin, HIGH);
-    //state=1;
-    //t1 = micros();
-    //t1 = t1-t0;
-    Serial.println(a);
-    //Serial.print("tempo [us]: ");
-    //Serial.println(t1);
-    //delayNanoseconds(5000);
-    //digitalWrite(13, LOW);
-    //delayMicroseconds(100000);
-    delay(1);
-    //state=0;
+  if(Serial.available()){
+    ch = Serial.read();
+    if (ch == '\n') {
+      //Serial.println(line);
+      if (line.equals("read")){
+        a = analogRead(inPin);   // set the LED on
+        Serial.println(a);
+      }
+      line = "";
+    } else if (ch != '\r') {
+      line += ch;  
+    }
   }
-  //if(a==0 and state==1){
-  //  digitalWrite(13, LOW);
-  //  state=0;
-  //}
 }
