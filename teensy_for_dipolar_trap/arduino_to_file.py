@@ -15,7 +15,7 @@ baud_rate = 9600 #In arduino, Serial.begin(baud_rate)
 
 delay = 0.2 # seconds
 today = time.strftime("%d-%m-%Y",time.gmtime(time.time()))
-name_exp = "_300_reps_1_sec"
+name_exp = "prova_ripompa_before_and_after_2"
 name = "dati/output"+today+name_exp+".txt"
 
 if path.exists(name)==True:
@@ -45,9 +45,13 @@ while True:
     print(line)
     
     # Getting current date and time
+    output_file = open(name, "a")
+
     output_file.write(now("%d-%m-%Y %H:%M:%S"))
     output_file.write(" ")
     output_file.write(line)
+
+    output_file.close()
     print(now("%d-%m-%Y %H:%M:%S"), " ", line)
 
     time.sleep(delay)

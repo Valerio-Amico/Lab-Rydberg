@@ -1,5 +1,6 @@
-const int inPin = A9;
-int a;
+const int inPin1 = A9;
+const int inPin2 = A8;
+int a, b;
 char ch;
 long int t0, t1;
 int state;
@@ -10,7 +11,8 @@ String line = "";
 void setup() {
   // initialize the digital pin as an output.
   Serial.begin(9600);
-  pinMode(inPin, INPUT);
+  pinMode(inPin1, INPUT);
+  pinMode(inPin2, INPUT);
   state = 0;
 }
 
@@ -23,8 +25,11 @@ void loop() {
     if (ch == '\n') {
       //Serial.println(line);
       if (line.equals("read")){
-        a = analogRead(inPin);   // set the LED on
-        Serial.println(a);
+        a = analogRead(inPin1); 
+        b = analogRead(inPin2);
+        Serial.print(a);
+        Serial.print(" ");
+        Serial.println(b);
       }
       line = "";
     } else if (ch != '\r') {
