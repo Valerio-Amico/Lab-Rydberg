@@ -13,9 +13,9 @@ def now(str):
 serial_port = '/dev/tty.usbmodem123383401'
 baud_rate = 9600 #In arduino, Serial.begin(baud_rate)
 
-delay = 0.2 # seconds
+delay = 0.1 # seconds
 today = time.strftime("%d-%m-%Y",time.gmtime(time.time()))
-name_exp = "prova_ripompa_before_and_after_2"
+name_exp = "prova_ripompa_before_and_after_with_lamina_good"
 name = "dati/output"+today+name_exp+".txt"
 
 if path.exists(name)==True:
