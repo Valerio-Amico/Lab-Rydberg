@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 import scipy.stats as scst
-
+import scipy.constants as scc
 
 class markov_chain_FORT:
     """
@@ -218,6 +218,62 @@ class markov_chain_FORT:
         plt.show()
         return
 """
+
+class dipole_trap:
+    def __init__(self, power, waist_0, Temperature=1e-5) -> None:
+        self.waist_0 = waist_0
+        self.power = power
+        self.rubidium_mass = 1.41810133E-25 # kg
+        self.Delta = -2*np.pi*27e12
+        self.T = Temperature # [K]
+        self.omega_0 = 2*np.pi*377e12
+        self.Gamma = scc.e**2*self.omega_0**2/(6*np.pi*scc.epsilon_0*scc.m_e*scc.c**3)
+        self.alpha = 3*scc.c**2 * self.Gamma * self.power / (self.omega_0**3 * abs(self.Delta))
+        self.wavelenght = 840e-9
+        self.z_R = np.pi*waist_0**2/self.wavelenght
+        self.var_r_0 = scc.Boltzmann * self.T * self.waist_0**4 / (4*self.alpha)
+        self.var_z_0 = self.var_r_0 * np.pi**2 * self.waist_0**2 / self.wavelenght**2
+        pass
+
+    def get_wz(self, z):
+        return self.waist_0*np.sqrt(1+(z/self.z_R)**2)
+
+    def var_r(self, t):
+        """ 
+        returns the variance of the density distribution in a time t.
+        """
+        return self.var_r_0 + (scc.Boltzmann*self.T/self.rubidium_mass) * t**2
+    
+    def var_z(self, t):
+        """ 
+        returns the variance of the density distribution in a time t.
+        """
+        return self.var_z_0 + (scc.Boltzmann*self.T/self.rubidium_mass) * t**2
+
+    def I(self, z, r):
+        return 2*self.power*np.exp(-2*r**2/(self.get_wz(z)**2))/(np.pi*self.get_wz(z)**2)
+
+    def get_inverse_I(self, z, I_0):
+        return self.get_wz(z)*np.sqrt(0.5*np.log(2*self.power/(np.pi*self.get_wz(z)**2*I_0)))
+
+    def U_dip(self, z, r):
+        """
+        returns the potential in mK.
+        """
+        return (3*np.pi*scc.c**2)/(2*self.omega_0**3) * (self.Gamma/self.Delta) * self.I(z, r) / scc.Boltzmann * 10**3
+    
+    def get_inverse_U_dip(self, z, U_0):
+        """
+        returns the r position of a point (z, U)
+        """
+        return self.get_wz(z)*np.sqrt(0.5*np.log(3*scc.c**2*self.power*self.Gamma/(self.omega_0**3 * self.get_wz(z)**2 * self.Delta * U_0)))
+    
+    def local_density(self, z, r, t=0):
+        return np.e**(- z**2/(2*self.var_z(t)) - r**2 / (2*self.var_r(t)))
+
+    def get_inverse_loc_dens(self, z, local_density_0, t=0):
+        return np.sqrt(-(np.log(local_density_0)+z**2/(2*self.var_z(t)))*2*self.var_r(t))
+
 def mean_var_mandel_Q(probability_vec):
     mean = 0
     men_2 = 0
