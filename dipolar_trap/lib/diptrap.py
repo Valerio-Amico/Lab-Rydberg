@@ -147,12 +147,15 @@ class markov_chain_FORT:
         #print(sol_paper.y[-1], sol_paper.t[-1])
         #print(means_[-1], self.evo.t[-1])
 
-        ax1.plot(self.evo.t, Qs_, linestyle="--", label="mandel Q", color="blue")
-        ax1.set_ylabel("mandel Q", fontsize=15)
+        ax1.plot(list(self.evo.t)+[1], list(Qs_)+[Qs_[-1]], linestyle="--", label="Mandel Q", color="blue")
+        #ax1.plot(self.evo.t, Qs_, linestyle="--", label="mandel Q", color="blue")
+
+        ax1.set_ylabel("Mandel Q", fontsize=15)
         
-        ax1.set_xlabel(r"time [s]", fontsize=15)
+        ax1.set_xlabel(r"Loading time [ms]", fontsize=15)
         #ax2.plot([0, self.evo.t[-1]],[1,1],c="gray",linestyle="--",alpha=0.7, label=r"$\langle N \rangle=1$")
-        ax2.plot(self.evo.t, means_, color="red",label=r"$\langle N \rangle$")
+        ax2.plot(list(self.evo.t)+[1], list(means_)+[means_[-1]], color="red",label=r"$\langle N \rangle$")
+        #ax2.plot(self.evo.t, means_, color="red",label=r"$\langle N \rangle$")
         #ax2.plot(self.evo.t, N_nm1s_, color="black",label=r"$\langle N \rangle \langle (N-1) \rangle$")
         #ax2.plot(self.evo.t, N_2s_, color="orange",label=r"$\langle N(N-1) \rangle$")
         #ax2.plot(self.evo.t, sol_paper.y[0], label="paper")
@@ -165,9 +168,10 @@ class markov_chain_FORT:
             ax1.set_xscale("log")
             ax2.set_xscale("log")
 
-        fig.legend(loc=(0.15,0.7), fontsize=15)
+        ax2.plot([],[], marker="o",ls="", color="tab:blue")
+        ax2.plot([],[], linestyle="--", label="Mandel Q", color="blue")
+        #fig.legend( fontsize=15)
 
-        plt.show()
         return
 """
     def plot_mandel_Q(self, evo_y, t_range, scale="lin"):
