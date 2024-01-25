@@ -225,8 +225,8 @@ class markov_chain_FORT:
 
 class dipole_trap:
     def __init__(self, power, waist_0, Temperature=1e-5) -> None:
-        self.waist_0 = waist_0
-        self.power = power
+        self.waist_0 = waist_0 #m
+        self.power = power #W
         self.rubidium_mass = 1.41810133E-25 # kg
         self.Delta = -2*np.pi*27e12
         self.T = Temperature # [K]
